@@ -1,5 +1,6 @@
 import numpy as np
 from sklearn.preprocessing import StandardScaler
+from sklearn.utils.extmath import svd_flip
 
 
 class PCA:
@@ -11,20 +12,20 @@ class PCA:
         # Center data
         X -= np.mean(X, axis=0)
 
-        # Compute the covariance matrix of the data.
-        covariance_matrix = np.cov(X)
+        # Calculate covariance matrix
+        cov = np.cov(X, rowvar=False)
 
-        # Get the eigenvectors and eigenvalues to determine the principal
-        # components of the data.
-        eigenvalues, eigenvectors = np.linalg.eig(covariance_matrix)
+        # Calculate eigenvalues and eigenvectors
+        eigenvalues, eigenvectors = np.linalg.eigh(cov)
 
-        # Sort the eigenvectors in decreasing order of eigenvalues (from bigger to smaller).
-        idx = eigenvalues.argsort()[::-1]   
+        # Sort eigenvalues and eigenvectors
+        idx = np.argsort(eigenvalues)[::-1]
         eigenvalues = eigenvalues[idx]
-        eigenvectors = eigenvectors[:,idx]
+        eigenvectors = eigenvectors[:, idx]
 
-        # Select the desired first n components
-        self.components_ = eigenvectors[self.n_components_]
+        # Store the first n eigenvectors
+        self.components_ = eigenvectors[:, :self.n_components_]
+        
 
     def fit_transform(self, X: np.ndarray) -> np.ndarray:
         self.fit(X)
@@ -33,10 +34,10 @@ class PCA:
         return transformed_X
 
     def transform(self, X: np.ndarray) -> np.ndarray:
-        # Standarize the data before transforming it.
-        scaler = StandardScaler()
-        X = scaler.fit_transform(X)
+        # Center data
+        X -= np.mean(X, axis=0)
 
-        transformed_X = self.components_.T * X.T
+        # Project data onto eigenvectors
+        transformed_X = np.dot(X, self.components_)
 
-        return transformed_X
+        return -transformed_X
