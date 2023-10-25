@@ -9,8 +9,7 @@ class PCA:
 
     def fit(self, X: np.ndarray) -> None:
         # Center data
-        scaler = StandardScaler()
-        X = scaler.fit_transform(X)
+        X -= np.mean(X, axis=0)
 
         # Compute the covariance matrix of the data.
         covariance_matrix = np.cov(X)
