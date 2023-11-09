@@ -23,5 +23,3 @@ def test_PCA_transform():
     expected_transformed_X = PCAsk(1).fit_transform(X)
 
     assert np.allclose(transformed_X, expected_transformed_X)
-
-# You can add more test cases and assertions as needed
