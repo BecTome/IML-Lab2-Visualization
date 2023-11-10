@@ -7,6 +7,8 @@ class PCA:
     def __init__(self, n_components: int) -> None:
         self.n_components_ = n_components
         self.components_ = None
+        self.explained_variance_ = None
+        self.explained_variance_ratio_ = None
 
     def fit(self, X: np.ndarray) -> None:
         # Center data
@@ -22,6 +24,8 @@ class PCA:
         idx = np.argsort(eigenvalues)[::-1]
         eigenvalues = eigenvalues[idx]
         eigenvectors = eigenvectors[:, idx]
+        self.explained_variance_ = eigenvalues
+        self.explained_variance_ratio_ = eigenvalues / eigenvalues.sum()
 
         # Store the first n eigenvectors
         self.components_ = eigenvectors[:, :self.n_components_]
