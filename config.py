@@ -62,6 +62,12 @@ D_FEATURES = {
 	}
 }
 
+D_TARGETS = {'glass': 'Type', 'heart-h': 'num', 'vote': 'Class'}
+
+## Evaluation
+from sklearn.metrics import silhouette_score, homogeneity_score, completeness_score,\
+                            v_measure_score, adjusted_rand_score, calinski_harabasz_score
+
 ## EVALUATION
 
 D_METRICS = {'internal': [silhouette_score, calinski_harabasz_score],
