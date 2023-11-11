@@ -6,28 +6,33 @@ class KMeans:
 
     """Class to perform K-Means Clustering"""
 
-    def __init__(self, k=3, random_state=0):
+    def __init__(self, k=3, max_iterations=100, random_state=0):
         """Initialize the KMeansClustering class"""
         self.k = k
         self.centroids = None
         self.labels_ = None
         self.inertia_ = 0
         self.random_state = random_state
+        self.max_iterations = max_iterations
         
     @staticmethod
     def euclidean_distance(data_point, centroids):
         """Calculate the Euclidean distance between a data point and the centroids"""
         return np.sqrt(np.sum((centroids - data_point)**2, axis=1))
     
-    def fit(self, data, max_iterations=100, use_points_as_centroids=True):
-        self.fit_predict(data, max_iterations, use_points_as_centroids)
+    def fit(self, data, use_points_as_centroids=True):
+        self.fit_predict(data, use_points_as_centroids)
 
-    def fit_predict(self, data, max_iterations=100, use_points_as_centroids=True, tolerance = 0.0001):
+    def fit_predict(self, data, use_points_as_centroids=True, tolerance = 0.0001):
         """Train the K-Means Clustering model"""
         np.random.seed(self.random_state)
         # Convert the input data to a numpy array
         X = data.copy()
-        X = data.to_numpy()
+        if isinstance(data, pd.DataFrame):
+            X = data.values
+
+        if X.shape[1] == 1:
+            X = np.reshape(X, (X.shape[0], 1))
         
         if use_points_as_centroids:
             # Initialize random data points to centroids
@@ -36,7 +41,7 @@ class KMeans:
             # Create random centroids
             self.centroids = np.random.uniform(np.amin(X, axis=0), np.amax(X, axis=0), size=(self.k, X.shape[1]))
         
-        for _ in range(max_iterations):
+        for _ in range(self.max_iterations):
             idxs = []
             self.inertia_ = 0
             # Assign each data point to the closest centroid
@@ -65,8 +70,8 @@ class KMeans:
                 break
             else:
                 self.centroids = np.array(new_centroids)
-        # Convert idxs to a DataFrame column
-        data["label"] = idxs
+        # # Convert idxs to a DataFrame column
+        # data["label"] = idxs
         self.labels_ = idxs
         return data
     
