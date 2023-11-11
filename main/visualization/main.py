@@ -1,3 +1,10 @@
+# Description: Main file for visualization of the project
+# 
+# To run it, use the following command:
+# python main/visualization/main.py --dataset <dataset>
+#
+# where <dataset> is one of the following: glass, heart-h, vote
+
 # %% [markdown]
 # # Visualization on Vote Dataset
 
@@ -6,6 +13,7 @@ from src.read.processing import Processing
 from src.decomposition.PCA import PCA
 from src.clustering.KMeans import KMeans
 from src.utils.utils import df_to_markdown
+import config
 
 from sklearn.cluster import Birch
 from sklearn.preprocessing import StandardScaler
@@ -25,10 +33,16 @@ import seaborn as sns
 import pandas as pd
 import numpy as np
 
-OUTPUT_PATH = 'output/visualization/vote/'
+# get arguments from command line
+import argparse
+parser = argparse.ArgumentParser()
+parser.add_argument("--dataset", help="Run P2 on given dataset")
+
+dataset = parser.parse_args().dataset
+OUTPUT_PATH = f'output/visualization/{dataset}/'
 if not os.path.exists(OUTPUT_PATH):
     os.makedirs(OUTPUT_PATH)
-    
+
 # %% [markdown]
 # # 1. Load Data
 
@@ -37,9 +51,12 @@ pd.set_option('display.max_columns', None)
 pd.set_option('display.max_rows', None)
 
 dataclass = Processing(source_path='input/datasets/')
-df_orig = dataclass.read('vote').copy()
+df_orig = dataclass.read(dataset).copy()
+df_orig['Class'] = df_orig[config.D_TARGETS[dataset]]
 dataclass.general_preprocessing()
 df = dataclass.df.copy()
+df['Class'] = df[config.D_TARGETS[dataset]]
+df.drop(columns=[config.D_TARGETS[dataset]], inplace=True)
 
 df.head()
 
