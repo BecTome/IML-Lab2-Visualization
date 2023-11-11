@@ -1,0 +1,40 @@
+body {
+    font-size: 10px;
+  }
+
+h1 {
+font-size: 13px;
+}
+
+h2 {
+font-size: 11px;
+}
+
+table {
+    width: 75%; /* Adjust the percentage as needed */
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 0.6em;
+  }
+
+  
+.image-container {
+    display: flex;
+    justify-content: space-between;
+  }
+
+.image-container img {
+    width: 48%; /* Adjust as needed */
+    height: auto;
+  }
+img {
+    width: 50%;
+    height: auto; /* Maintain the aspect ratio */
+    display: block; /* Remove any extra space below the image */
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+
+  
+  
