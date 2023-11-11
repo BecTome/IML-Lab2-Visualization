@@ -10,6 +10,15 @@
     "PYTHONPATH": "${workspaceFolder}"
 }, 
 
-"jupyter.notebookFileRoot": "${workspaceFolder}"
+"jupyter.notebookFileRoot": "${workspaceFolder}",
+
+  "markdownConverter.Assets.StyleSheets": {
+    "./css/styles.css": "Default",
+  },
+
+  "markdownConverter.Assets.Scripts": {
+    "https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js": "Default"
+  },
+  "markdown.styles": ["./css/styles.css"]
 
 }
