@@ -70,6 +70,9 @@ class Processing:
         for column in df.columns:
             if df[column].dtype == "object":
                 df[column] = df[column].str.decode("utf-8")
+        
+        columns = {c: c.replace("'", "") for c in df.columns}
+        df = df.rename(columns=columns)
 
         logging.info(f"\nData read successfully ({df.shape[0]} rows, {df.shape[1]} columns)")
 
