@@ -26,7 +26,7 @@ D_FEATURES = {
 			},
 		}
 	},
-"hearth":
+"heart-h":
 	{
 		"numeric":["trestbps", "chol", "thalach", "oldpeak"],
 		"nominal": ['sex', 'chest_pain', 'fbs', 'restecg', 
