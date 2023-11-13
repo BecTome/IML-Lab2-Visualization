@@ -12,6 +12,7 @@
 - [6. Cluster the transformed Data (SVD) using K-Means and Birch](#6-cluster-the-transformed-data-svd-using-k-means-and-birch)
 - [7. Visualize in low-dimensional space](#7-visualize-in-low-dimensional-space)
 - [8. Conclusions](#8-conclusions)
+- [9. Bibliography](#9-bibliography)
 
 
 # 1. Introduction
@@ -347,7 +348,22 @@ The scatter plot in the image shows the lower-dimensional embedding of the Glass
 In the case of Heart-h dataset, the data is also clustered using two different algorithms, and the
  results show that BIRCH algorithm is able to cluster the data into three distinct groups, while KMeans results in two clusters. 
 
-# 6. Bibliography
+# 8. Conclusions
+
+- Is PCA giving you more advice for knowing the underlying information in the data set?
+- Is BIRCH giving you more advice for knowing the underlying information in the data set?
+- Can you explain the setup that you have used for PCA algorithm?
+- Can you reduce the dimensionality of the data set? In case of an affirmative answer, detail
+how do you do and how many features have been reduced from the original data set.
+- Can you detail how you decided to make the reduction using truncatedSVD have you obtained
+and how much have been reduced from the original data set.
+- Do you obtain the same results from your code of PCA to the code in sklearn? Explain the
+similarities and the differences among the two implementations.
+- Can you explain if you obtain similar clusters with the data set reduced to those obtained in
+the original data? In addition, have you observed a reduction in time?
+- Which are the similarities and differences in the visualizations obtained using PCA and ISOMAP? 
+
+# 9. Bibliography
 [1] Scikit-learn.org. 2020. Sklearn.Decomposition.PCA — Scikit-Learn 0.23.2
 Documentation. [online] Available at:
 <https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.PCA.htm
@@ -371,19 +387,3 @@ l> [Accessed 14 November 2020].
 [online] Available at:
 <http://ufldl.stanford.edu/tutorial/unsupervised/PCAWhitening/> [Accessed 14
 November 2020].
-
-# 8. Conclusions
-
-- Is PCA giving you more advice for knowing the underlying information in the data set?
-- Is BIRCH giving you more advice for knowing the underlying information in the data set?
-- Can you explain the setup that you have used for PCA algorithm?
-- Can you reduce the dimensionality of the data set? In case of an affirmative answer, detail
-how do you do and how many features have been reduced from the original data set.
-- Can you detail how you decided to make the reduction using truncatedSVD have you obtained
-and how much have been reduced from the original data set.
-- Do you obtain the same results from your code of PCA to the code in sklearn? Explain the
-similarities and the differences among the two implementations.
-- Can you explain if you obtain similar clusters with the data set reduced to those obtained in
-the original data? In addition, have you observed a reduction in time?
-- Which are the similarities and differences in the visualizations obtained using PCA and
-ISOMAP? 
