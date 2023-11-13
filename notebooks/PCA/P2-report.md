@@ -2,8 +2,13 @@ P2 Report - Visualization and Dimensionality Reduction
 ------------------------------------------------------
 [[toc]]
 # 1. Introduction
+This report runs trough different dimensionality reduction algorithms. It explores the differences between these and the outputs they produce. The paper explores a custom PCA and compares this with the Sklearn PCA, the Incremental PCA and Truncated SVD. Finally, we visualize these results in a low-dimensional space with PCA and ISOMAP.
 
+We will run the experiments using two base algorithms: K-Means and BIRCH. 
+* K-means clustering is a partitioning algorithm that divides a dataset into K distinct, non-overlapping subsets (clusters) where each data point belongs to the cluster with the nearest mean.
+* BIRCH (Balanced Iterative Reducing and Clustering using Hierarchies) is a hierarchical clustering algorithm that incrementally builds a tree-like structure to represent the data distribution efficiently.
 
+These results will run over the datasets explained in the following section.
 
 # 2. Chosen Datasets
 
@@ -325,3 +330,28 @@ The scatter plot in the image shows the lower-dimensional embedding of the Glass
 
 In the case of Heart-h dataset, the data is also clustered using two different algorithms, and the
  results show that BIRCH algorithm is able to cluster the data into three distinct groups, while KMeans results in two clusters. 
+
+# 6. Bibliography
+[1] Scikit-learn.org. 2020. Sklearn.Decomposition.PCA — Scikit-Learn 0.23.2
+Documentation. [online] Available at:
+<https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.PCA.htm
+l> [Accessed 14 November 2020].
+[2] Scikit-learn.org. 2020. Sklearn.Decomposition.PCA — Scikit-Learn 0.23.2
+Documentation. [online] Available at:
+<https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.PCA.htm
+l> [Accessed 14 November 2020].
+[3] Scikit-learn.org. 2020. Sklearn.Manifold.TSNE — Scikit-Learn 0.23.2 Documentation.
+[online] Available at:
+<https://scikit-learn.org/stable/modules/generated/sklearn.manifold.TSNE.html>
+[Accessed 14 November 2020].
+[4] wikipedia.org. 2020. Principal Component Analysis. [online] Available at:
+<https://es.wikipedia.org/wiki/An%C3%A1lisis_de_componentes_principales>
+[Accessed 14 November 2020].
+[5] sitiobigdata.com. 2020. Tsne Con Python, Una Introducción - Sitiobigdata.Com.
+[online] Available at:
+<https://sitiobigdata.com/2019/10/27/una-introduccion-a-tsne-con-python/#>
+[Accessed 14 November 2020].
+[6] Ufldl.stanford.edu. 2020. Unsupervised Feature Learning And Deep Learning Tutorial.
+[online] Available at:
+<http://ufldl.stanford.edu/tutorial/unsupervised/PCAWhitening/> [Accessed 14
+November 2020].
