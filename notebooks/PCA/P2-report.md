@@ -1,6 +1,19 @@
-P2 Report - Visualization and Dimensionality Reduction
+0.1. P2 Report - Visualization and Dimensionality Reduction
 ------------------------------------------------------
-[[toc]]
+
+- [1. Introduction](#1-introduction)
+- [2. Chosen Datasets](#2-chosen-datasets)
+- [3. Implementation of PCA algorithm](#3-implementation-of-pca-algorithm)
+- [4. Analysis and Exploration](#4-analysis-and-exploration)
+  - [4.1. PCA Developed in this work](#41-pca-developed-in-this-work)
+  - [4.2. Sklearn PCA](#42-sklearn-pca)
+  - [4.3. Sklearn IncrementalPCA](#43-sklearn-incrementalpca)
+- [5. Use PCA with k-Means and BIRCH to compare performances](#5-use-pca-with-k-means-and-birch-to-compare-performances)
+- [6. Cluster the transformed Data (SVD) using K-Means and Birch](#6-cluster-the-transformed-data-svd-using-k-means-and-birch)
+- [7. Visualize in low-dimensional space](#7-visualize-in-low-dimensional-space)
+- [8. Conclusions](#8-conclusions)
+
+
 # 1. Introduction
 
 
@@ -13,15 +26,15 @@ Vote dataset is composed by 435 samples and 17 features. All the features are ca
 
 Heart-h dataset is composed by 294 instances and 14 attributes, including the predicted one "num". The features are both categorical and numerical. This predicted attribute signifies the diagnosis of angiographic heart disease, classifying cases into two categories. A value of 0 indicates less than 50% diameter narrowing in the coronary arteries, suggesting a less severe condition. Conversely, a value of 1 denotes more than 50% diameter narrowing, indicating a more critical and potentially advanced stage of heart disease. 
 
+# 3. Implementation of PCA algorithm
 
-
-# 3. Analyze PCA implementation
+# 4. Analysis and Exploration
 
 In this section we will explore the Vote dataset with the PCA algortihm. 
 
-## 3.1. PCA Developed in this work
+## 4.1. PCA Developed in this work
 
-In this section, we will explore the results obtained with the implmenetation of our PCA.
+In this section, we will explore the results obtained with the implmenetation of our PCA. Some examples are provided for one of the datasets because the results are similar for all of them.
 
 Given that this transformations are linear and based on the covariance matrix, no real world understanding can be extracted, at first glance, from the new coordinates. An example can be found in Table 1.
 
@@ -83,14 +96,14 @@ The results for the handmade PCA projection on the three datasets are shown in t
 
 It's noticeable that, in vote dataset, the half of the Principal Components don't explain anything. The reason is that the data is categorical and binary and in our One Hot Encoding, there is a column for Yes and another one for No. This causes that each pair of features are linearly dependent and hence, they don't provide any information, which is represented as a zero variance in the PC space. In Table 3 can be observed that the "No" class loadings are the opposite of the "Yes" class loadings.
 
-In the case of glass data, we can see that the the variance is slowly reduced until it reaches 0, where the ninth principal component does not explain any of the variance in the graph. The eight component corresponds to around 4% **no seria 7??** of the variance that is explained in the first component. 
+In the case of glass data, we can see that the the variance is slowly reduced until it reaches 0, where the ninth principal component does not explain any of the variance in the graph. The seventh component corresponds to around 4% of the variance that is explained in the first component. 
 
 And in the case of heart-h dataset, we can see that the first principal component is the one that explains the major part of the variance, with a proportion of the 0.91 of the variance. This is similar to what happens in the vote dataset, altough now the difference between the first and the second component is higher. This results could be attributed to several factors in the preprocessing pipeline when dealing with different types of variables, such as standardizing numerical features, imputing missing values with the median, and encoding categorical variables. 
 
 In the following sections, we can, therefore, see the contrast between variance in a categorical dataset (such as vote), a continuous-variables dataset (glass) and a dataset containing both categorical and continuous-variables (heart-h).
 
 
-## 3.2. Sklearn PCA
+## 4.2. Sklearn PCA
 
 When Scikit-Learn's implementation is applied to our dataset, the results are the same respect to the coordinates in our new PC space. This happens independently of the datasets.
 
@@ -106,7 +119,7 @@ The only difference found, is that the signs are not the same in some of the com
 
 The explained variance results are also exactly the same in all the cases, given that the same one-shot algorithm is used.
 
-## 3.3. Sklearn IncrementalPCA
+## 4.3. Sklearn IncrementalPCA
 
 The PCA object proves to be beneficial but exhibits limitations when dealing with large datasets. Its primary drawback is its exclusive support for batch processing, necessitating that all data fit into main memory. In contrast, the IncrementalPCA object offers an alternative processing approach, enabling partial computations that closely align with PCA results while handling data in a minibatch manner.
 
@@ -146,14 +159,9 @@ As an illustrative example, a comparison in time performance has been done with 
 From these figures we can conclude that there isn't a significant change in the current variance explained of each component. However, we know that the IncrementalPCA is designed to be a more efficient form of PCA: losing some accuracy to in change have better memory and temporal usage. This is specifically useful for larger datasets, we can see that the training time in the incremental PCA starts to be noticable very early and around the 420 batch we can see a large difference between our PCA, the incremental PCA and the Sklearn PCA. Indicating, that the larger we make the batch size the greater difference we will see between the computational times in the different versions of the PCA.
 
 
-# 4. Use PCA with k-Means and BIRCH to compare performances
+# 5. Use PCA with k-Means and BIRCH to compare performances
 
-**ESTA BIEN AKI??**
 In this section, our own implementation of PCA and k-Means, together with sklearn's BIRCH, are used in order to cluster the data.
-
-As shown in Figure 1, for vote dataset after projecting the data into the 2 first Principal Components, the classes are quite well separated. A lot of variables weren't providing almost any information in terms of variance. This causes the well known dimensionality curse, in which when the number of features is increased, the performance of the algorithm decreases. This is why PCA is used, to reduce the number of features and hence, the dimensionality of the data.
-
-In the case of glass dataset, only using the first 2 components it's not enough to make the classes separable given the complexity of the problem. This can be infered as
 
 
 <div class="image-container">
@@ -169,6 +177,8 @@ In the case of glass dataset, only using the first 2 components it's not enough 
 
 **Vote dataset**
 
+As shown in Figure 1, for vote dataset after projecting the data into the 2 first Principal Components, the classes are quite well separated. A lot of variables weren't providing almost any information in terms of variance. This causes the well known dimensionality curse, in which when the number of features is increased, the performance of the algorithm decreases. This is why PCA is used, to reduce the number of features and hence, the dimensionality of the data.
+
 As can be infered from the previous plot, in every case, incrementing the number of components even adding more information, leads to equal or worse results. This is because of the dimensionality curse. The more features, the worse the performance of the algorithm. In the case of silhouette score, a model trained only with the first component has far better value than in the case of the model trained without applying PCA. In the other hand, in terms of V-Measure, KMeans increases its performance when trained with just one component. However, Birch's performance slightly decreases. As it is an informed external metric, it is more sensitive to the information loss.
 
 Another interesting fact is that both algorithms have exactly the same performance when trained with the first component.
@@ -183,6 +193,8 @@ Another interesting fact is that both algorithms have exactly the same performan
 
 
 **Glass dataset**
+
+After projecting glass dataset, it can be observed that only using the first 2 components it's not enough to make the classes separable given the complexity of the problem.
 
 In the case of silhouette score, a model trained only with the first component has far better silhouette score than in the case of the model trained without applying PCA. On the other hand, in terms of V-Measure, both Birch and K-Means' performance slightly increase with 2 and 6 components, but decrease in other cases. KMeans obtains a maximum with 4 components whereas Birch obtains the maximum V-Measure score with 4 components.
 
@@ -220,7 +232,7 @@ In Heart-h dataset, we can observe that the silohouette results are better when 
 
 We can see in Figure 6 and 7 a slight improvement in the temporal capacity of the algorithms as well. Again we see that due to the size of the chosen datasets the temporal difference is not as significant as it would be with a larger dataset. Either way, we see that Birch shows promising results both in the training scores and the efficiency of the datasets.
 
-# 5. Cluster the transformed Data (SVD) using K-Means and Birch
+# 6. Cluster the transformed Data (SVD) using K-Means and Birch
 
 The Singular Value Decomposition (SVD) is a fundamental numerical linear algebra technique that decomposes a matrix into three other matrices. Given a matrix $A$ of dimensions $m \times n$, the SVD can be represented as:
 
@@ -262,8 +274,12 @@ If SVD is directly applied to the data, the behavior is strange. The first singu
 
 The results in case of vote and heart-h datasets are quite different from the ones obtained from PCA. After running some other experiments, it's been noticed that this effect is due to the scale of the features. In fact, when Standard Scaler is applied, the results are virtually the same as in PCA (except sign). For glass dataset, the results are the same as in sklearn's PCA (the same as in Figure 1 except change in signs).
 
-**a que imagen se refiere**
-The distribution of the explained variance ratio by singular values is similar to the one we had for PCA but in this case, the first singular value is the lowest one, being the first one 0.01, the second one 0.47, the third one 0.08 and the rest are decreasing in magnitude. This can be due to this scaling issue. In the case of glass dataaset, the distribution is similar to the one obtained in PCA for explained variance ratio.
+The distribution of the explained variance ratio by singular values is similar to the one we had for PCA but in this case, the first singular value is the lowest one, being 0.01, the second one 0.47, the third one 0.08 and the rest are decreasing in magnitude. 
+
+![png](PCA-vote_files/PCA-vote_46_0.png)
+  <figcaption style="text-align:center;font-size:0.8em">Figure: Performance in clustering using different number of components for vote and glass datasets and SVM</figcaption> 
+
+This can be due to this scaling issue. In the case of glass dataaset, the distribution is similar to the one obtained in PCA for explained variance ratio.
 
 <div class="image-container">
   <img src="PCA-vote_files/PCA-vote_47_0.png" alt="Image 1" >
@@ -277,7 +293,7 @@ The distribution of the explained variance ratio by singular values is similar t
   <figcaption style="text-align:center;font-size:0.8em">Figure 5: Performance comparison for clustering using different number of components for heart-h datasets</figcaption>
 </div>
 
-# 6. Visualize in low-dimensional space
+# 7. Visualize in low-dimensional space
 
 In this subsection, original data sets are visualized together with the result of the k-Means and BIRCH algorithms without the dimensionality reduction, and the result of the k-Means and BIRCH algorithms with the dimensionality reduction. To visualize in a lowdimensional space (2D or 3D) PCA and ISOMAP approaches are used. 
 
@@ -325,3 +341,19 @@ The scatter plot in the image shows the lower-dimensional embedding of the Glass
 
 In the case of Heart-h dataset, the data is also clustered using two different algorithms, and the
  results show that BIRCH algorithm is able to cluster the data into three distinct groups, while KMeans results in two clusters. 
+
+# 8. Conclusions
+
+- Is PCA giving you more advice for knowing the underlying information in the data set?
+- Is BIRCH giving you more advice for knowing the underlying information in the data set?
+- Can you explain the setup that you have used for PCA algorithm?
+- Can you reduce the dimensionality of the data set? In case of an affirmative answer, detail
+how do you do and how many features have been reduced from the original data set.
+- Can you detail how you decided to make the reduction using truncatedSVD have you obtained
+and how much have been reduced from the original data set.
+- Do you obtain the same results from your code of PCA to the code in sklearn? Explain the
+similarities and the differences among the two implementations.
+- Can you explain if you obtain similar clusters with the data set reduced to those obtained in
+the original data? In addition, have you observed a reduction in time?
+- Which are the similarities and differences in the visualizations obtained using PCA and
+ISOMAP? 
