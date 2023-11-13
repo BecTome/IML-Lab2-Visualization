@@ -1,43 +1,14 @@
-# IML-Lab1-Clustering
+# IML-Lab2-Visualization
+The following code has to be run from inside the code/ file in the project. The paths are relative to this location.
 
-## Modules
-- analysis
-    - `data_selection.py`: Run to generate pandas profiles fot all the datasets. The output folder is not sync-ed with git.
-
-## Environment setup
+## Environment setup + run code
 1. Developed on PyCharm using Conda environment + Python 3.7
-2. Working Directory: `IML-Lab1-Clustering`
-3. Export conda env `conda env export --no-builds > environment.yml`
-4. Restore conda env `conda env create -f environment.yml`
+2. Working Directory: `IML-Lab2-Visualization/code/`
+3. Generate env: `python -m venv env/`
+4. Activate environment: `source env/bin/activate`
+5. Install requirements: `pip install -r requirements.txt`
+6. Run for 'heart-h' dataset: `python3 main.py --dataset heart-h`
+7. Run for 'vote' dataset: `python3 main.py --dataset vote`
+8. Run for 'glass' dataset: `python3 main.py --dataset glass`
 
-## How to run the code
-
-**Important**: In the editor, set the working directory to `IML-Lab1-Clustering` before running the code.
-
-```
-python main.py
-```
-
-**Note**: PAM algorithm takes longer than the rest.
-
-## Configuration
-
-In `config.py`, you can configure the following parameters:
-
-- `Hyperparameters grid`
-- `Feature selection`
-- `Clustering algorithms`
-- `Datasets`
-- `Output folder`
-
-## More details
-
-A highly automatized process has been designed to perform fast and efficient clustering on multiple datasets. The process is as follows:
-
-1. Load the datasets
-2. Perform feature selection
-3. Perform clustering
-4. Evaluate the clustering
-5. Save the results
-
-Everything is inside the `src.trainflow` library
+IMPORTANT: run the code within the IML-Lab2-Visualization/code/ folder!
