@@ -27,6 +27,7 @@ from sklearn.manifold import Isomap
 from time import time
 import os
 
+import matplotlib
 import matplotlib.pyplot as plt
 import seaborn as sns
 
@@ -61,17 +62,14 @@ df_orig['Class'] = df_orig[config.D_TARGETS[dataset]]
 dataclass.general_preprocessing()
 df = dataclass.df.copy()
 df['Class'] = df[config.D_TARGETS[dataset]]
-if config.D_TARGETS[dataset] != "Class":
+if config.D_TARGETS[dataset] != 'Class':
     df.drop(columns=[config.D_TARGETS[dataset]], inplace=True)
-df.head()
-
-# %%
 
 X = df.iloc[:, :-1]
+X = X.astype(float)
 y = df.iloc[:, [-1]]
 
 pca = PCA(n_components=X.shape[1])
-print(type(X))
 X_transformed = pca.fit_transform(X)
 df_pca = pd.DataFrame(X_transformed, columns=[f'PC{i}' for i in range(1, X.shape[1] + 1)])
 df_pca['Class'] = df_orig['Class']
@@ -81,12 +79,6 @@ df_pca['Class'] = df_orig['Class']
 df_pca_toshow = df_pca.iloc[:5, :5].copy()
 filename = os.path.join(OUTPUT_PATH, 'header_own_pca.md')
 df_to_markdown(df_pca_toshow, filename)
-
-# %% [markdown]
-# Given that the data is implicitly centered but not standardized, the mean 
-# of the data is zero but its variance is not one. It doesn't affect the results 
-# but it is important to take into account when analyzing the results.
-
 # %%
 # Statistics summary for our own pca
 summ_pca_to_show = df_pca.describe().iloc[:, :5].copy()
@@ -108,18 +100,7 @@ plt.title("PCA on Vote dataset (our implementation)")
 plt.xlabel("PC1")
 plt.ylabel("PC2")
 plt.savefig(os.path.join(OUTPUT_PATH, 'scatter_own_pca.png'))
-
-# %% [markdown]
-# As was previously mentioned, the first component is the one with higher variance. 
-# The second component has a lower variance than the first one but it is still higher 
-# than the third one. The third component has the lowest variance of all of them.
-# 
-# It's noticeable that the half of the Principal Components don't explain anything. 
-# This can be explained by the fact that the data is categorical and binary and in our 
-# One Hot Encoding, there is a column for Yes and another one for No. This causes that 
-# each pair of features are linearly dependent and hence, they don't provide any 
-# information, which is represented as a zero variance in the PC space.
-
+plt.close()
 # %%
 # Plot explained variance
 plt.figure(figsize=(18, 7))
@@ -133,22 +114,8 @@ plt.xlabel("Principal component")
 plt.ylabel("Explained variance ratio (our implementation)")
 plt.tight_layout()
 plt.savefig(os.path.join(OUTPUT_PATH, 'barimportance_own_pca.png'))
-
-
+plt.close()
 # %% [markdown]
-# If our own PCA implementation is ran, the results are exactly the same. This is 
-# because the algorithm is the same and the results are the same. The only difference 
-# is that the algorithm is implemented in a different way.
-# 
-# However, in the following scatterplot can be seen that the plot is "rotated". This 
-# isn't something to worry about because the results are the same. When Principal 
-# Components are calculated, the only constraint is that they are orthogonal and 
-# unitary so there's ambiguity in the sign of the components. This is why the plot 
-# is rotated.
-
-# %% [markdown]
-# ## 2.2. Sklearn PCA
-
 # %%
 # Same with sklearn PCA
 
@@ -185,29 +152,6 @@ plt.xlabel("Principal component")
 plt.ylabel("Explained variance ratio")
 plt.tight_layout()
 plt.savefig(os.path.join(OUTPUT_PATH, 'barimportance_sklearn_pca.png'))
-
-# %% [markdown]
-# # 3. Compare with IncrementalPCA
-
-# %% [markdown]
-# The PCA object proves to be beneficial but exhibits limitations when dealing with 
-# large datasets. Its primary drawback is its exclusive support for batch processing, 
-# needing that all data fit into main memory. In contrast, the IncrementalPCA 
-# object offers an alternative processing approach, enabling partial computations that 
-# closely align with PCA results while handling data in a minibatch manner. This 
-# facilitates the implementation of out-of-core Principal Component Analysis through 
-# two methods:
-# 
-# 1. Utilizing the `partial_fit` method on sequentially fetched data chunks from the 
-# local hard drive or a network database.
-# 2. Invoking the `fit` method on a sparse matrix or a memory-mapped file using 
-# `numpy.memmap`.
-# 
-# Notably, IncrementalPCA stores estimates of component and noise variances, updating 
-# `explained_variance_ratio_` incrementally. Consequently, memory usage is contingent 
-# on the number of samples per batch rather than the overall dataset size.
-
-# %%
 
 ipca = IncrementalPCA(n_components=X.shape[1])
 X_ipca_transformed = ipca.fit_transform(X)
@@ -351,11 +295,7 @@ fig.savefig(os.path.join(OUTPUT_PATH, 'bartime_pca_algorithms.png'))
 # performance of the algorithm decreases. This is why PCA is used, to reduce the number 
 # of features and hence, the dimensionality of the data.
 
-# %%
-
-# %%
-X = df.iloc[:, :-1]
-y = df_orig["Class"]
+y = df["Class"]
 
 n_clusters = len(np.unique(y))
 
@@ -368,11 +308,24 @@ kmeans = model_dbs = Pipeline([
     ('scaler', StandardScaler()),
     ('model', KMeans(k=n_clusters, max_iterations=100, random_state=0))])
 
-# %%
 def evaluate_model(model, X, y):
+
     model.fit(X)
     y_pred = model['model'].labels_
-    return silhouette_score(X, y_pred), v_measure_score(y, y_pred)
+        
+    try:
+        silhouette = silhouette_score(X, y_pred)
+    except Exception as e:
+        # print(f"An error occurred during silhouette score calculation: {e}")
+        silhouette = 0
+
+    try:
+        v_measure = v_measure_score(y, y_pred)
+    except Exception as e:
+        # print(f"An error occurred during v-measure score calculation: {e}")
+        v_measure = 0
+
+    return silhouette, v_measure
 
 # %% [markdown]
 # # Cluster the transformed Data using BIRCH
@@ -916,24 +869,6 @@ plt.xlabel("X1")
 plt.ylabel("X2")
 plt.savefig(os.path.join(OUTPUT_PATH, 'scatter_original.png'))
 
-# %% [markdown]
-# 
-
-# %% [markdown]
-# # 6. Visualize in low-dimensional space
-
-# %% [markdown]
-# Visualize in low-dimensional space. You need to visualize your original data sets, the result of
-# the k-Means and BIRCH algorithms without the dimensionality reduction, and the result of the
-# k-Means and BIRCH algorithms with the dimensionality reduction. To visualize in a lowdimensional space (2D or 3D) you will use: PCA and ISOMAP. You will find useful information
-# of how to deal with this algorithm at:
-
-# %% [markdown]
-# Given that the data is categorical, the visualization of its 2 first components is not very useful. Until now, 2 first linear projections have been used in order to visualize the data, such as SVD and PCA. The result is that they both provide similar information.
-# 
-# In this case, Self Organized Maps are used in order to have a nonlinear point of view, i.e. to use a different approach.
-
-# %%
 birch.fit(X)
 kmeans.fit(X)
 
@@ -949,7 +884,7 @@ axs[1].set_title("KMeans results on the original Dataset")
 axs[1].set_xlabel("X1")
 axs[1].set_ylabel("X2")
 plt.savefig(os.path.join(OUTPUT_PATH, 'scatter_original_birch_kmeans.png'))
-
+matplotlib.pyplot.close()
 # %%
 isomap = Isomap(n_components=2)
 
@@ -978,10 +913,5 @@ axs[1, 1].set_title("KMeans on the original Dataset using ISOMAP")
 axs[1, 1].set_xlabel("PC1")
 axs[1, 1].set_ylabel("PC2")
 plt.savefig(os.path.join(OUTPUT_PATH, 'scatter_birch_kmeans_pca_isomap.png'))
-
-# %% [markdown]
-# In this case, both algorithms provide similar information. This can be due to 
-# the fact that the data is not very complex and hence, the linear projection is 
-# enough to visualize the data.
 
 

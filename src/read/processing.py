@@ -193,6 +193,7 @@ class Processing:
                     # Convert to int
                     prep_df = df_to_int(prep_df, [col])
         
+        prep_df
         self.df = prep_df
         
         return prep_df

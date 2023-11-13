@@ -42,7 +42,7 @@ def one_hot_encoding(df, cols):
     """
     One hot encode the columns of the dataset
     """
-    df = pd.get_dummies(df, columns=cols, drop_first=True)
+    df = pd.get_dummies(df, columns=cols, drop_first=True, dtype=int)
     return df
 
  
@@ -86,8 +86,6 @@ def df_to_int(df, cols):
     """
     df.loc[:, cols] = df.loc[:, cols].astype(int)
     return df
-
-
  
 def df_to_string(df, cols):
     """
