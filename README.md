@@ -7,8 +7,8 @@ The following code has to be run from inside the code/ file in the project. The 
 3. Generate env: `python -m venv env/`
 4. Activate environment: `source env/bin/activate`
 5. Install requirements: `pip install -r requirements.txt`
-6. Run for 'heart-h' dataset: `python3 main.py --dataset heart-h`
-7. Run for 'vote' dataset: `python3 main.py --dataset vote`
-8. Run for 'glass' dataset: `python3 main.py --dataset glass`
+6. Run for 'heart-h' dataset: `python3 code/main.py --dataset heart-h`
+7. Run for 'vote' dataset: `python3 code/main.py --dataset vote`
+8. Run for 'glass' dataset: `python3 code/main.py --dataset glass`
 
 IMPORTANT: run the code within the IML-Lab2-Visualization/code/ folder!
