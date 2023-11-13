@@ -99,7 +99,7 @@ transformed_X = np.dot(X, self.components_)
 ### 3.1.7. Sign Convention
 
 The decision to return the negation of the transformed data (`return -transformed_X`) is a choice made to align with the sign convention of the `sklearn.decomposition.PCA` class. This choice is arbitrary, as the sign of the principal components is not unique.
-
+<br></br>
 ```python
 return -transformed_X
 ```
@@ -157,7 +157,9 @@ The results for the handmade PCA projection on the three datasets are shown in t
   <img src="PCA-heart-h_files/PCA-heart-h_12_0.png" alt="Image 3" >
   <figcaption style="text-align:center;font-size:0.8em">Figure 1: Projection results handmade PCA for a vote (left), glass (right), and heart-h (bottom) dataset</figcaption>
 </div>
-
+<br/><br/>
+<br/><br/>
+<br/><br/>
 <div class="image-container">
   <img src="PCA-vote_files/PCA-vote_14_0.png" alt="Image 1" >
   <img src="PCA-glass_files/PCA-glass_19_0.png" alt="Image 2" > <!-- Adjust as needed -->
@@ -186,6 +188,8 @@ When Scikit-Learn's implementation is applied to our dataset, the results are th
 | 0 | 2.538132  | 0.208806  | 0.664641  | -0.174588 | -0.450081 |
 | 1 | 2.566310  | 0.385575  | -0.730238 | 0.070440  | -0.545899 |
 | 2 | 1.181888  | 1.863804  | 0.193548  | -0.056694 | 0.517372  |
+<br/><br/>
+<br/><br/>
 <figcaption style="text-align:center;font-size:0.8em">Table 4: First 3 samples for vote dataset in the new PC space using sklearn PCA</figcaption>
 
 The only difference found is that the signs are not the same in some of the components. This is because the only restrictions are in the orthogonality and unitarity of the components. But there is freedom in the choice of the sign of the components.
