@@ -4,6 +4,14 @@
 - [1. Introduction](#1-introduction)
 - [2. Chosen Datasets](#2-chosen-datasets)
 - [3. Implementation of PCA algorithm](#3-implementation-of-pca-algorithm)
+  - [Implementation Decisions](#implementation-decisions)
+    - [1. Covariance Matrix Calculation](#1-covariance-matrix-calculation)
+    - [2. Eigenvalues and Eigenvectors Calculation](#2-eigenvalues-and-eigenvectors-calculation)
+    - [3. Sorting Eigenvalues and Eigenvectors](#3-sorting-eigenvalues-and-eigenvectors)
+    - [4. Storing Components](#4-storing-components)
+    - [5. Centering Data](#5-centering-data)
+    - [6. Transformation](#6-transformation)
+    - [7. Sign Convention](#7-sign-convention)
 - [4. Analysis and Exploration](#4-analysis-and-exploration)
   - [4.1. PCA Developed in this work](#41-pca-developed-in-this-work)
   - [4.2. Sklearn PCA](#42-sklearn-pca)
@@ -33,6 +41,68 @@ Vote dataset is composed by 435 samples and 17 features. All the features are ca
 Heart-h dataset is composed by 294 instances and 14 attributes, including the predicted one "num". The features are both categorical and numerical. This predicted attribute signifies the diagnosis of angiographic heart disease, classifying cases into two categories. A value of 0 indicates less than 50% diameter narrowing in the coronary arteries, suggesting a less severe condition. Conversely, a value of 1 denotes more than 50% diameter narrowing, indicating a more critical and potentially advanced stage of heart disease. 
 
 # 3. Implementation of PCA algorithm
+
+Principal Component Analysis (PCA) is a widely used technique for dimensionality reduction and feature extraction. This section discusses the decisions made in the implementation of a PCA class in Python.
+
+## Implementation Decisions
+
+### 1. Covariance Matrix Calculation
+
+The first crucial step in PCA is to compute the covariance matrix. In this implementation, the `np.cov` function is used with `rowvar=False` to ensure that columns represent variables and rows represent observations. This choice is in line with standard practice and ensures that the resulting covariance matrix has dimensions matching the number of features.
+
+```python
+cov = np.cov(X, rowvar=False)
+```
+
+### 2. Eigenvalues and Eigenvectors Calculation
+
+To find the principal components, eigenvalues and eigenvectors of the covariance matrix are computed. The decision to use `np.linalg.eigh` is appropriate, as it assumes the input matrix is Hermitian (symmetric for real matrices) and utilizes a more stable algorithm for eigenvalue decomposition compared to `np.linalg.eig`.
+
+```python
+eigenvalues, eigenvectors = np.linalg.eigh(cov)
+```
+
+### 3. Sorting Eigenvalues and Eigenvectors
+
+To maintain consistency and facilitate interpretation, eigenvalues and their corresponding eigenvectors are sorted in descending order. The use of `np.argsort` is efficient, and the resulting index array is reversed (`[::-1]`) to ensure the highest eigenvalue comes first.
+
+```python
+idx = np.argsort(eigenvalues)[::-1]
+eigenvalues = eigenvalues[idx]
+eigenvectors = eigenvectors[:, idx]
+```
+
+### 4. Storing Components
+
+The first `n` eigenvectors are stored as principal components. This decision aligns with the goal of dimensionality reduction, retaining only the most important features.
+
+```python
+self.components_ = eigenvectors[:, :self.n_components_]
+```
+
+### 5. Centering Data
+
+Centering the data by subtracting the mean is performed at two stages: during the fit and transform steps. This ensures consistency in the treatment of data, aligning with the fundamental principle of PCA.
+
+```python
+X -= np.mean(X, axis=0)
+```
+
+### 6. Transformation
+
+The transformation of the data is accomplished by projecting it onto the selected principal components. The transformation function is implemented efficiently using matrix multiplication.
+
+```python
+transformed_X = np.dot(X, self.components_)
+```
+
+### 7. Sign Convention
+
+The decision to return the negation of the transformed data (`return -transformed_X`) is a choice made to align with the sign convention of the `sklearn.decomposition.PCA` class. This choice is arbitrary, as the sign of the principal components is not unique.
+
+```python
+return -transformed_X
+```
 
 # 4. Analysis and Exploration
 
